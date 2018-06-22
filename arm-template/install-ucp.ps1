@@ -74,7 +74,7 @@ function Join-Swarm {
     # For Partial mode we setup the node but stop short of joining to Swarm
     # Node will be joined to Swarm during the lab
     Write-Output "Partially setup node and stopping short of joining cluster"
-    Setup-Chocolatey
+    Start-Job -scriptblock {Setup-Chocolatey}
 
   }
   Else {
@@ -132,7 +132,7 @@ function Join-Swarm {
       docker swarm join --token $UCP_JOIN_TOKEN_WORKER $UCP_MANAGER_ADDRESS
       
       # Additional Setup
-      Setup-Chocolatey
+      Start-Job -scriptblock {Setup-Chocolatey}
     }
     Catch {
       Write-Error "Unable to join node to Swarm"
@@ -141,20 +141,23 @@ function Join-Swarm {
 
   }
 
+  # Puts pre-pulling images into the background so the install script can return that it completed.
+  # We don't need to wait for script completion for these images to be pulled. 
+  Start-Job -scriptblock {Pre-Pull-Images}
+
 }
 
 function Pre-Pull-Images {
 
-  # Pre-Pull images used in the lab
-  docker pull microsoft/iis:latest
-  docker pull microsoft/aspnetcore-build:latest
-  docker pull microsoft/aspnetcore:latest
+  # Background job: Pre-Pull images used in the lab
+  docker pull dockersamples/mta-dev-web-builder:4.7.1
+  docker pull microsoft/aspnet:4.7.1-windowsservercore-10.0.14393.1884
 
 }
 
 function Setup-Chocolatey {
 
-  # Setup Chocolatey itself
+  # Background job: Setup Chocolatey itself
   # https://chocolatey.org/install#install-with-powershellexe
   Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
