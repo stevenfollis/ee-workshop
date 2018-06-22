@@ -868,9 +868,7 @@ Click on `java-web-published` to the the details of the public load balancer cre
 
 ![](./images/kube-java-lb.png)
 
-There will be a link for the public url where the service on port 8080 is exposed. Click on that link, add `/java-web/` at the end of the url. You should be led to the running application.
-
-> If the port in the URL is not `8080`, for example `33871`, then the Azure Load Balancer named `apps` needs to be re-configured. [Create a probe](https://docs.microsoft.com/en-us/azure/load-balancer/tutorial-load-balancer-standard-public-zonal-portal#create-a-health-probe) and [load balancer rule](https://docs.microsoft.com/en-us/azure/load-balancer/tutorial-load-balancer-standard-public-zonal-portal#create-a-load-balancer-rule) for the given port to allow traffic into the cluster on the designated port.
+There will be a link for the public url where the service on port 32770 is exposed. Click on that link, add `/java-web/` at the end of the url. You should be led to the running application.
 
 ![](./images/kube-running-app.png)
 
@@ -896,7 +894,7 @@ Security is crucial for all organizations. And it is a complicated topic, too in
 
  	![](./images/cves.png)
 
- 1. One way you can reduce your vulnerabilities is to choose newer images. For instance, you can go back to the Dockerfile in the `~/hybrid-app/java-app` directory, and change the second base image to `tomcat:9.0.6-jre-9-slim`. Slim images in official images are generally based on lighter-weight operating systems like `Alpine Linux` or `Debian`, which have reduced attack space. You can change the Dockerfile using `vim` or `emacs`.
+ 1. One way you can reduce your vulnerabilities is to choose newer images. For instance, you can go back to the Dockerfile in the `~/hybrid-app/java-app` directory, and change the second base image to `tomcat:9.0.8-jre10-slim`. Slim images in official images are generally based on lighter-weight operating systems like `Alpine Linux` or `Debian`, which have reduced attack space. You can change the Dockerfile using `vim` or `emacs`.
 
 	![](./images/tomcat9.png)
 
@@ -906,7 +904,7 @@ Security is crucial for all organizations. And it is a complicated topic, too in
 
 	You'll still see vulnerabilites, but far fewer.
 
-1. If you look at the components of the `tomcat:9.0.6-jre-9-slim` image, you will see that the critical and major vulnerabilities were brought in the `Spring` libraries. So maybe it's time to upgrade our app! 
+1. If you look at the components of the `tomcat:9.0.8-jre10-slim` image, you will see that the critical and major vulnerabilities were brought in the `Spring` libraries (not pictured below). So maybe it's time to upgrade our app! 
 
 	![](./images/tomcat9-components.png)
 
@@ -924,9 +922,9 @@ Security is crucial for all organizations. And it is a complicated topic, too in
 	
 	Bad: `docker`, `docker-ee`, `docker-lab`. 
 
-* The Azure Load Balancer requires a given port to be explicitly opened via a routing rule and probe. Ports `80`, `443` and `8080` are pre-opened for the lab, but if you publish a container with a port outside of this it will not be resolveable until also updating the Load Balancer. Example: publishing a service to port `30001` would require an additional LB routing rule and probe.
+* The Azure Load Balancer requires a given port to be explicitly opened via a routing rule and probe. Ports `80`, `443`, `8080` and `32770` are pre-opened for the lab, but if you publish a container with a port outside of this it will not be resolveable until also updating the Load Balancer. Example: publishing a service to port `30001` would require an additional LB routing rule and probe.
 
-* The hostname routing feature of Docker EE's Interlock 2.0 system typically allow you to use a DNS name rather than a port number to load applications. However, this requires additonal setup not done for the lab - setting up a DNS Wildcard entry pointing at the apps load balancer.
+* The hostname routing feature of Docker EE's Interlock 2.0 system typically allows you to use a DNS name rather than a port number to load applications. However, this requires additonal setup not done for the lab - setting up a DNS Wildcard entry pointing at the apps load balancer.
 
 * This lab provisions a highly-available cluster of 10 virtual machine nodes. Azure Subscriptions container a quota of number of VM cores; if you hit an error during template deployment related to cores quota please remove VMs from other resource groups. This lab has not been tested on other sized Docker EE clusters.
 
