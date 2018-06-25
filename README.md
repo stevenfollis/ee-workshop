@@ -150,7 +150,7 @@ One of the key benefits of Docker EE is the ability to manage both Linux-based a
 
 	> **Note** When navigating within an Azure Portal Resource Group blade that container numerous resources, toggle the `No grouping` dropdown on the top-right control bar to `Group by type`. It will be infinitely easier to locate particular resources.
 
-	On your local machine, open the .rdp file and login using username `\eeadmin` and password `DockerEE123!`. Open a PowerShell window inside of the RDP connection and run `docker version` to ensure that the Docker Engine was properly installed.
+	On your local machine, open the .rdp file and login using username `eeadmin` and password `DockerEE123!`. Open a PowerShell window inside of the RDP connection and run `docker version` to ensure that the Docker Engine was properly installed.
 
 	PowerShell should return the installed versions of the Docker Client and local Docker Engine and look similar to:
 
@@ -182,7 +182,7 @@ One of the key benefits of Docker EE is the ability to manage both Linux-based a
 
 	On your local machine, SSH into the VM. If you are running Windows 10 Fall Creator's Update or later you have SSH built into PowerShell and can run the `ssh` command directly in PowerShell. Otherwise, [putty](https://www.howtogeek.com/311287/how-to-connect-to-an-ssh-server-from-windows-macos-or-linux/) or the Windows Subsystem for Linux (WSL) can be used. 
 
-	Once you establish an SSH connection to the remote VM, run `sudo docker version` to ensure that the Docker Engine was properly installed. The terminal output should look nearly identical to the PowerShell in the previous step.
+	Once you establish an SSH connection to the remote VM, run `docker version` to ensure that the Docker Engine was properly installed. The terminal output should look nearly identical to the PowerShell in the previous step.
 
 	> **Note** if you get an error `Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.30/version: dial unix /var/run/docker.sock: connect: permission denied` please ensure you ran the command with `sudo` prepended
 
@@ -198,12 +198,6 @@ The Azure environment is almost completely set up, but before we can begin the l
 The "Universal Control Plane" is a web-based interface for administering our container workloads across an entire cluster of virtual machine nodes. Next, we will use UCP to finalize our cluster configuration.
 
 1. Navigate in your web browser to the UCP URL that you previously located in the Azure Portal. ex. `https://ucp-gf-docker-lab52.eastus.cloudapp.azure.com`
-
-	> **Note**: Because this is a lab-based install of Docker EE we are using the default self-signed certificates. Because of this your browser may display a security warning. It is safe to click through this warning.
-	>
-	> In a production environment you would use certificates from a trusted certificate authority and would not see this screen.
-	>
-	> ![](./images/ssl_error.png)
 
 1. When prompted enter the username `eeadmin` and password `DockerEE123!`. The UCP web interface should load up in your web browser.
 
@@ -224,7 +218,7 @@ Let's start by adding our 2nd Windows Server 2016 worker node to the cluster.
 	> **Note**: There is an icon in the upper right corner of the box that you can click to copy the text to your clipboard
 	![](./images/join_text.png)
 
-	> **Note**: You may notice that there is a UI component to select `Linux` or `Windows`on the `Add Node` screen. In a production environment where you are starting from scratch there are [a few prerequisite steps](https://docker.com/ddc-34) to adding a Windows node. However, we've already done these steps in the ARM Template setup script.
+	> **Note**: You may notice that there is a UI component to select `Linux` or `Windows` on the `Add Node` screen. In a production environment where you are starting from scratch there are [a few prerequisite steps](https://docker.com/ddc-34) to adding a Windows node. However, we've already done these steps in the ARM Template setup script.
 
 ![](./images/windows75.png)
 
@@ -252,23 +246,23 @@ However, before we create the repositories, we do want to restrict access to the
 
 1. Open DTR from the URL located in the Ouputs section of the Azure Portal's Template Deployment blade that we located earlier, ex. `https://dtr-gf-docker-lab.eastus.cloudapp.azure.com`
 
-	> **Note**: As with UCP before, DTR is also using self-signed certs. It's safe to click through any browser warning you might encounter.
+3. Apply the `docker_subscription.lic` to DTR. In DTR, go to `System`, click `Apply New License`, and upload the `docker_subscription.lic` file.
 
-2. From the main DTR page, click **Users** on the left-hand nav, and then the click the green **New user** button in the top-right corner of the screen.
+4. From the main DTR page, click **Users** on the left-hand nav, and then the click the green **New user** button in the top-right corner of the screen.
 
 	![](./images/user_screen.png)
 
-3. Create a new user, `java_user` and give it a password you'll remember. I used `user1234`. Be sure to save the user.
+5. Create a new user, `java_user` and give it a password you'll remember. I used `user1234`. Be sure to save the user.
 
 	![](/images/create_java_user.png)
 
 	Then do the same for a `dotnet_user`.
 
-4. Select **Organizations** from the left-hand navigation menu
+6. Select **Organizations** from the left-hand navigation menu
 
 	![](./images/organization_screen.png)
 
-5. Create a new organization by clicking the  `New organization` button. Name it `java`, and click **Save***.
+7. Create a new organization by clicking the  `New organization` button. Name it `java`, and click **Save***.
 
 	![](./images/java_organization_new.png)
 
@@ -276,17 +270,17 @@ However, before we create the repositories, we do want to restrict access to the
 
 	![](./images/two_organizations.png)
 
-6. Now you get to add a repository! Click on the **java** organization, select **Repositories** and then **New repository**
+8. Now you get to add a repository! Click on the **java** organization, select **Repositories** and then **New repository**
 
 	![](./images/add_repository_java.png)
 
-7. Name the repository `java_web`. 
+9. Name the repository `java_web`. 
 
 	![](./images/create_repository.png)
 
 	> Note the repository is listed as "Public" but that means it is publicly viewable by users of DTR. It is not available to the general public.
 
-8. Now it's time to create a team so you can restrict access to who administers the images. Select the **Members** tab of the **java** organization and the members will show up. Press Add user and start typing in java. Select the `java_user` when it comes up.
+10. Now it's time to create a team so you can restrict access to who administers the images. Select the **Members** tab of the **java** organization and the members will show up. Press Add user and start typing in java. Select the `java_user` when it comes up.
 
 	![](./images/add_java_user_to_organization.png)
 
@@ -518,8 +512,9 @@ You can do that right in the edit box in `UCP` but wanted to make sure you saw t
 
     networks:
       back-tier:
+        external: true
       front-tier:
-        external: true 
+        external: true
 
     secrets:
       mysql_password:
@@ -678,6 +673,7 @@ Now that we've moved the app and updated it, we're going to add in a user sign-i
 
     networks:
       back-tier:
+	    external: true
 	  front-tier:
 	    external: true
 
@@ -793,8 +789,8 @@ services:
     networks:
       back-tier:
     ports:
-    - published: 3306
-      target: 3306
+    - published: 32768
+      target: 32768
 
   dotnet-api:
     deploy:
@@ -805,7 +801,7 @@ services:
     networks:
       back-tier:
     ports:
-    - published: 57989
+    - published: 32769
       target: 80
 
   java-web:
@@ -820,11 +816,12 @@ services:
       back-tier:
       front-tier:
     ports:
-    - published: 8080
+    - published: 32770
       target: 8080
 
 networks:
   back-tier:
+    external: true
   front-tier:
     external: true
 
@@ -871,9 +868,7 @@ Click on `java-web-published` to the the details of the public load balancer cre
 
 ![](./images/kube-java-lb.png)
 
-There will be a link for the public url where the service on port 8080 is exposed. Click on that link, add `/java-web/` at the end of the url. You should be led to the running application.
-
-> If the port in the URL is not `8080`, for example `33871`, then the Azure Load Balancer named `apps` needs to be re-configured. [Create a probe](https://docs.microsoft.com/en-us/azure/load-balancer/tutorial-load-balancer-standard-public-zonal-portal#create-a-health-probe) and [load balancer rule](https://docs.microsoft.com/en-us/azure/load-balancer/tutorial-load-balancer-standard-public-zonal-portal#create-a-load-balancer-rule) for the given port to allow traffic into the cluster on the designated port.
+There will be a link for the public url where the service on port 32770 is exposed. Click on that link, add `/java-web/` at the end of the url. You should be led to the running application.
 
 ![](./images/kube-running-app.png)
 
@@ -899,7 +894,7 @@ Security is crucial for all organizations. And it is a complicated topic, too in
 
  	![](./images/cves.png)
 
- 1. One way you can reduce your vulnerabilities is to choose newer images. For instance, you can go back to the Dockerfile in the `~/hybrid-app/java-app` directory, and change the second base image to `tomcat:9.0.6-jre-9-slim`. Slim images in official images are generally based on lighter-weight operating systems like `Alpine Linux` or `Debian`, which have reduced attack space. You can change the Dockerfile using `vim` or `emacs`.
+ 1. One way you can reduce your vulnerabilities is to choose newer images. For instance, you can go back to the Dockerfile in the `~/hybrid-app/java-app` directory, and change the second base image to `tomcat:9.0.8-jre10-slim`. Slim images in official images are generally based on lighter-weight operating systems like `Alpine Linux` or `Debian`, which have reduced attack space. You can change the Dockerfile using `vim` or `emacs`.
 
 	![](./images/tomcat9.png)
 
@@ -909,7 +904,7 @@ Security is crucial for all organizations. And it is a complicated topic, too in
 
 	You'll still see vulnerabilites, but far fewer.
 
-1. If you look at the components of the `tomcat:9.0.6-jre-9-slim` image, you will see that the critical and major vulnerabilities were brought in the `Spring` libraries. So maybe it's time to upgrade our app! 
+1. If you look at the components of the `tomcat:9.0.8-jre10-slim` image, you will see that the critical and major vulnerabilities were brought in the `Spring` libraries (not pictured below). So maybe it's time to upgrade our app! 
 
 	![](./images/tomcat9-components.png)
 
@@ -927,9 +922,9 @@ Security is crucial for all organizations. And it is a complicated topic, too in
 	
 	Bad: `docker`, `docker-ee`, `docker-lab`. 
 
-* The Azure Load Balancer requires a given port to be explicitly opened via a routing rule and probe. Ports `80`, `443` and `8080` are pre-opened for the lab, but if you publish a container with a port outside of this it will not be resolveable until also updating the Load Balancer. Example: publishing a service to port `30001` would require an additional LB routing rule and probe.
+* The Azure Load Balancer requires a given port to be explicitly opened via a routing rule and probe. Ports `80`, `443`, `8080` and `32770` are pre-opened for the lab, but if you publish a container with a port outside of this it will not be resolveable until also updating the Load Balancer. Example: publishing a service to port `30001` would require an additional LB routing rule and probe.
 
-* The hostname routing feature of Docker EE's Interlock 2.0 system typically allow you to use a DNS name rather than a port number to load applications. However, this requires additonal setup not done for the lab - setting up a DNS Wildcard entry pointing at the apps load balancer.
+* The hostname routing feature of Docker EE's Interlock 2.0 system typically allows you to use a DNS name rather than a port number to load applications. However, this requires additonal setup not done for the lab - setting up a DNS Wildcard entry pointing at the apps load balancer.
 
 * This lab provisions a highly-available cluster of 10 virtual machine nodes. Azure Subscriptions container a quota of number of VM cores; if you hit an error during template deployment related to cores quota please remove VMs from other resource groups. This lab has not been tested on other sized Docker EE clusters.
 
