@@ -36,7 +36,8 @@
       "type": "object",
       "defaultValue": {
         "engine": {
-          "linux": "stable-17.06",
+          "linux": "17.06.2",
+          "linux_package": "3:17.06.2~ee~14~3-0~ubuntu",
           "windows": "17.06.2-ee-14"
         },
         "ucp": "latest",
@@ -1201,7 +1202,7 @@
               "[parameters('scripts').installDockerEE]",
               "[parameters('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine.linux, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker ', parameters('versions').ucp, ' ', variables('shared').networking.subnets[1].properties.addressPrefix)]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine.linux, ' ', parameters('versions').engine.linux_package, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker ', parameters('versions').ucp, ' ', variables('shared').networking.subnets[1].properties.addressPrefix)]"
           }
         }
       }]

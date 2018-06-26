@@ -8,6 +8,9 @@ readonly DOCKER_EE_URL=$1
 # Repository name for Docker EE Engine
 readonly DOCKER_EE_VERSION=$2
 
+# Package version for docker-ee
+readonly DOCKER_EE_PACKAGE=$3
+
 installEngine() {
 
   # Update the apt package index
@@ -35,7 +38,7 @@ installEngine() {
   # Install the latest version of Docker EE
   # dpkg produces lots of chatter
   # redirect to abyss via https://askubuntu.com/a/258226
-  sudo apt-get -qq install docker-ee > /dev/null
+  sudo apt-get -qq install docker-ee=${DOCKER_EE_PACKAGE} > /dev/null
 
   # Add eeadmin to Docker Group
   sudo groupadd docker
