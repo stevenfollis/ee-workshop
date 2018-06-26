@@ -36,7 +36,7 @@
       "type": "object",
       "defaultValue": {
         "engine": {
-          "linux": "17.06.2",
+          "linux": "stable-17.06",
           "linux_package": "3:17.06.2~ee~14~3-0~ubuntu",
           "windows": "17.06.2-ee-14"
         },
