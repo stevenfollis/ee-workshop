@@ -36,8 +36,8 @@
       "type": "object",
       "defaultValue": {
         "engine": {
-          "linux": "stable-17.06-13",
-          "windows": "17.06.2-ee-13"
+          "linux": "stable-17.06",
+          "windows": "17.06.2-ee-14"
         },
         "ucp": "latest",
         "dtr": "latest"
