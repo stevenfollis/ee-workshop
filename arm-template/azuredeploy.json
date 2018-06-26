@@ -36,7 +36,7 @@
       "type": "object",
       "defaultValue": {
         "engine": {
-          "linux": "stable-17.06",
+          "linux": "stable-17.06-13",
           "windows": "17.06.2-ee-13"
         },
         "ucp": "latest",
@@ -621,6 +621,26 @@
                 "id": "[resourceId('Microsoft.Network/loadBalancers/probes', 'apps', 'tcp8080')]"
               }
             }
+          },
+          {
+            "name": "tcp32770",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIpConfigurations', 'apps', 'LoadBalancerFrontEnd')]"
+              },
+              "frontendPort": 32770,
+              "backendPort": 32770,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 4,
+              "protocol": "Tcp",
+              "loadDistribution": "Default",
+              "backendAddressPool": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', 'apps', 'LoadBalancerBackEnd')]"
+              },
+              "probe": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/probes', 'apps', 'tcp32770')]"
+              }
+            }
           }
         ],
         "probes": [{
@@ -646,6 +666,15 @@
             "properties": {
               "protocol": "Tcp",
               "port": 8080,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          },
+          {
+            "name": "tcp32770",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 32770,
               "intervalInSeconds": 5,
               "numberOfProbes": 2
             }

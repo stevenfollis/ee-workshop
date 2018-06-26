@@ -141,27 +141,31 @@ function Join-Swarm {
 
   }
 
+  Pre-Pull-Images
+
 }
 
 function Pre-Pull-Images {
 
-  # Pre-Pull images used in the lab
-  docker pull microsoft/iis:latest
-  docker pull microsoft/aspnetcore-build:latest
-  docker pull microsoft/aspnetcore:latest
+  # Background job: Pre-Pull images used in the lab
+  start-job -scriptblock {
+    docker pull dockersamples/mta-dev-web-builder:4.7.1
+    docker pull microsoft/aspnet:4.7.1-windowsservercore-ltsc2016
+  }
 
 }
 
 function Setup-Chocolatey {
 
-  # Setup Chocolatey itself
-  # https://chocolatey.org/install#install-with-powershellexe
-  Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  # Background job: Setup Chocolatey itself
+  start-job -scriptblock {
+    # https://chocolatey.org/install#install-with-powershellexe
+    Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-  # Install git
-  # https://chocolatey.org/packages/git.install
-  choco install git.install -y
-
+    # Install git
+    # https://chocolatey.org/packages/git.install
+    choco install git.install -y
+  }
 }
 
 function Main {
