@@ -1032,7 +1032,7 @@
               "[parameters('scripts').installDockerEE]",
               "[parameters('scripts').installUCP]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine.linux, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager ', parameters('versions').ucp, ' ', variables('shared').networking.subnets[1].properties.addressPrefix)]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh', ' ', parameters('dockerEEURL'), ' ', parameters('versions').engine.linux, ' ', parameters('versions').engine.linux_package, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Manager ', parameters('versions').ucp, ' ', variables('shared').networking.subnets[1].properties.addressPrefix)]"
           }
         }
       }]
@@ -1118,7 +1118,7 @@
               "[parameters('scripts').installUCP]",
               "[parameters('scripts').installDTR]"
             ],
-            "commandToExecute": "[concat('sh install-docker-ee.sh ', parameters('dockerEEURL'), ' ', parameters('versions').engine.linux, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker ', parameters('versions').ucp, ' ', variables('shared').networking.subnets[1].properties.addressPrefix, ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn, ' ', parameters('versions').dtr, ' ', variables('shared').storage.name, ' ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('shared').storage.name), '2016-12-01').keys[0].value)]"
+            "commandToExecute": "[concat('sh install-docker-ee.sh ', parameters('dockerEEURL'), ' ', parameters('versions').engine.linux, ' ', parameters('versions').engine.linux_package, ' && sh install-ucp.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'apps')).dnsSettings.fqdn, ' Worker ', parameters('versions').ucp, ' ', variables('shared').networking.subnets[1].properties.addressPrefix, ' && sh install-dtr.sh ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'ucp')).dnsSettings.fqdn, ' ', reference(resourceId('Microsoft.Network/publicIPAddresses', 'dtr')).dnsSettings.fqdn, ' ', parameters('versions').dtr, ' ', variables('shared').storage.name, ' ', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('shared').storage.name), '2016-12-01').keys[0].value)]"
           }
         }
       }]
