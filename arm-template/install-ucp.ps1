@@ -1,4 +1,4 @@
-# Join a Windows Server 2016 node 
+  # Join a Windows Server 2016 node 
 # to Docker Universal Control Plane 
 
 param (
@@ -147,25 +147,27 @@ function Join-Swarm {
 
 function Pre-Pull-Images {
 
-  # Background job: Pre-Pull images used in the lab
-  start-job -scriptblock {
-    docker pull dockersamples/mta-dev-web-builder:4.7.1
-    docker pull microsoft/aspnet:4.7.1-windowsservercore-ltsc2016
-  }
+  # Pre-Pull images used in the lab
+  Write-Output "Pre-pulling docker images that will be used in the workshop"
+  docker pull dockersamples/mta-dev-web-builder:4.7.1
+  docker pull microsoft/aspnet:4.7.1-windowsservercore-ltsc2016
+  Write-Output "Finished pre-pulling docker images that will be used in the workshop"
 
 }
 
 function Setup-Chocolatey {
 
-  # Background job: Setup Chocolatey itself
-  start-job -scriptblock {
-    # https://chocolatey.org/install#install-with-powershellexe
-    Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  Write-Output "Setting up Chocolately so we can install Git for use in the workshop"
 
-    # Install git
-    # https://chocolatey.org/packages/git.install
-    choco install git.install -y
-  }
+  # Setup Chocolatey itself
+  # https://chocolatey.org/install#install-with-powershellexe
+  Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+  Write-Output "Installing Git"
+  # Install git
+  # https://chocolatey.org/packages/git.install
+  choco install git.install -y
+  Write-Output "Finished setting up Chocolately and Git"
 }
 
 function Main {
